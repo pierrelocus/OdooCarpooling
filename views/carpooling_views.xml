@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Carpooling views -->
+    <record id="carpooling_view_form" model="ir.ui.view">
+      <field name="name">carpooling.carpooling.form</field>
+      <field name="model">carpooling.carpooling</field>
+      <field name="arch" type="xml">
+        <form>
+          <header>
+            <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+          </header>
+          <sheet>
+            <div class="oe_button_box" name="button_box">
+              <button class="oe_stat_button"
+                      type="object"
+                      name="smart_button_poolers"
+                      icon="fa-user">
+                <div class="o_stat_info">
+                  <field name="taken_seats" class="o_stat_value"/>
+                  <span class="o_stat_text" attrs="{'invisible': [('taken_seats', '&lt;', 2)]}"> Poolers</span>
+                  <span class="o_stat_text" attrs="{'invisible': [('taken_seats', '&gt;', 1)]}"> Pooler</span>
+                </div>
+              </button>
+            </div>
+            <group>
+              <group>
+                <field name="driver_id"/>
+                <field name="departure_id"/>
+                <field name="departure_date"/>
+                <field name="arrival_id"/>
+                <hr/>
+                <field name="is_return"/>
+                <field name="return_date" attrs="{'invisible': [('is_return', '=', False)]}"/>
+                <field name="seats"/>
+                <field name="steps_ids"/>
+              </group>
+              <group>
+                <field name="distance"/>
+                <field name="cost" widget="monetary"/>
+                <field name="info"/>
+                <hr/>
+                <field name="money_economy"/>
+                <br/>
+                <field name="avg_cotwo_economy"/>
+              </group>
+            </group>
+            <notebook>
+              <page string="Take a seat">
+                <field name="pooler_ids">
+                  <tree editable="bottom">
+                    <field name="name"/>
+                  </tree>
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+          <div class="oe_chatter">
+              <field name="message_follower_ids" widget="mail_followers"/>
+              <field name="activity_ids" widget="mail_activity"/>
+              <field name="message_ids" widget="mail_thread"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <record id="carpooling_view_list" model="ir.ui.view">
+      <field name="name">carpooling.capooling.tree</field>
+      <field name="model">carpooling.carpooling</field>
+      <field name="arch" type="xml">
+        <tree>
+            <field name="driver_id"/>
+            <field name="departure_tree"/>
+            <field name="steps_ids" widget="many2many_tags"/>
+            <field name="departure_date"/>
+            <field name="arrival_tree"/>
+            <field name="is_return"/>
+            <field name="return_date" attrs="{'invisible': [('is_return', '=', False)]}"/>
+            <field name="taken_seats_tree"/>
+            <field name="cost"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="carpooling_view_search" model="ir.ui.view">
+      <field name="name">carpooling.view.search</field>
+      <field name="model">carpooling.carpooling</field>
+      <field name="arch" type="xml">
+        <search string="Search Carpooling">
+          <field name="driver_id"/>
+          <field name="departure_tree" string="Departure"/>
+          <field name="arrival_tree" string="Arrival"/>
+          <field name="departure_date" string="Departure date"/>
+          <field name="return_date" string="Return date"/>
+          <separator/>
+          <filter name="is_return" string="Has return" domain="[('is_return', '=', True)]"/>
+          <filter name="has_seats" string="Has seats" domain="['!', ('state', '=', 'full')]"/>
+          <separator/>
+          <filter name="is_free" string="Has no cost" domain="[('cost', '=', 0.00)]"/>
+          <filter name="is_tomorrow"
+                  string="Is tomorrow" 
+                  domain="['&amp;',
+                          ('departure_date', '>=', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d')),
+                          ('departure_date', '&lt;', (context_today() + relativedelta(days=2)).strftime('%Y-%m-%d'))]"/>
+        </search>
+      </field>
+    </record>
+
+    <record id="carpooling_action" model="ir.actions.act_window">
+      <field name="name">Carpool</field>
+      <field name="res_model">carpooling.carpooling</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Pooler views -->
+    <record id="pooler_view_form" model="ir.ui.view">
+      <field name="name">carpooling.pooler.form</field>
+      <field name="model">res.partner</field>
+      <field name="arch" type="xml">
+        <form string="Pooler">
+          <group>
+            <field name="name"/>
+            <field name="carpooling_ids"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <record id="pooler_view_tree" model="ir.ui.view">
+      <field name="name">carpooling.pooler.tree</field>
+      <field name="model">res.partner</field>
+      <field name="arch" type="xml">
+        <tree string="Pooler">
+          <field name="name"/>
+          <field name="carpooling_ids"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="pooler_action" model="ir.actions.act_window">
+      <field name="name">Poolers</field>
+      <field name="res_model">res.partner</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('carpooling_ids', '!=', False)]</field>
+    </record>
+
+    <record id="pooler_action_view_tree" model="ir.actions.act_window.view">
+        <field name="view_mode">tree</field>
+        <field name="sequence" eval="10"/>
+        <field name="view_id" ref="carpooling.pooler_view_tree"/>
+        <field name="act_window_id" ref="carpooling.pooler_action"/>
+    </record>
+
+    <record id="pooler_action_view_form" model="ir.actions.act_window.view">
+        <field name="view_mode">form</field>
+        <field name="sequence" eval="20"/>
+        <field name="view_id" ref="carpooling.pooler_view_form"/>
+        <field name="act_window_id" ref="carpooling.pooler_action"/>
+    </record>
+
+</odoo>

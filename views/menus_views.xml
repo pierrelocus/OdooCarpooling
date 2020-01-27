@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <menuitem
+    id="root_menu"
+    name="Carpooling"
+    web_icon="carpooling,static/description/icon.png"/>
+  
+  <menuitem
+    id="carpooling_menu"
+    name="Carpools and Poolers"
+    parent="carpooling.root_menu"
+    sequence="10"/>
+
+  <menuitem
+    id="carpooling_menu_action"
+    name="Carpools"
+    action="carpooling_action"
+    parent="carpooling.carpooling_menu"
+    sequence="10"/>
+
+  <menuitem
+    id="carpooling_pooler_action"
+    name="Poolers"
+    action="pooler_action"
+    parent="carpooling.carpooling_menu"
+    sequence="20"/>
+</odoo>
