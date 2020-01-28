@@ -24,8 +24,10 @@
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
+        'views/journey_views.xml',
         'views/carpooling_views.xml',
         'views/menus_views.xml',
+        #'views/journey_views.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

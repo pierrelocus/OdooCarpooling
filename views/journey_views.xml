@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="journey_view_form" model="ir.ui.view">
+        <field name="name">carpooling.journey.form</field>
+        <field name="model">carpooling.journey</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_toggle_carpools" 
+                            string="Create Carpoolings" 
+                            class="oe_highlight" 
+                            type="object" 
+                            attrs="{'invisible': [('has_carpoolings', '=', True)]}"/>
+                    <button name="action_toggle_carpools" 
+                            string="Delete related carpoolings" 
+                            class="oe_highlight" 
+                            type="object" 
+                            attrs="{'invisible': [('has_carpoolings', '=', False)]}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="driver_id"/>
+                            <field name="departure_id"/>
+                            <field name="arrival_id"/>
+                            <field name="seats"/>
+                            <field name="steps_ids"/>
+                        </group>
+                        <group>
+                            <field name="cost"/>
+                            <field name="distance"/>
+                            <field name="day_ids"/>
+                            <field name="until_date"/>
+                            <field name="info"/>
+                            <field name="has_carpoolings" attrs="{'invisible': True}"/>
+                        </group>
+                    </group>
+                    <hr/>
+                    <group>
+                        <group>
+                            <field name="money_economy"/>
+                        </group>
+                        <group>
+                            <field name="avg_cotwo_economy"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="journeys_action" model="ir.actions.act_window">
+        <field name="name">Journeys</field>
+        <field name="res_model">carpooling.journey</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+
+    <!-- Days views -->
+    <record id="days_view_form" model="ir.ui.view">
+        <field name="name">carpooling.days.form</field>
+        <field name="model">carpooling.days</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="day"/>
+                        <field name="times" widget="float_time"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="days_view_tree" model="ir.ui.view">
+        <field name="name">carpooling.days.tree</field>
+        <field name="model">carpooling.days</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="day"/>
+                <field name="times" widget="float_time"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="days_action" model="ir.actions.act_window">
+        <field name="name">Days</field>
+        <field name="res_model">carpooling.days</field>
+        <field name="view_mode">form,tree</field>
+    </record>
+</odoo>

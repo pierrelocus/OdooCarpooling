@@ -12,16 +12,23 @@
     sequence="10"/>
 
   <menuitem
+    id="carpooling_journeys_action"
+    name="Journeys"
+    action="journeys_action"
+    parent="carpooling.carpooling_menu"
+    sequence="10"/>
+
+  <menuitem
     id="carpooling_menu_action"
     name="Carpools"
     action="carpooling_action"
     parent="carpooling.carpooling_menu"
-    sequence="10"/>
+    sequence="20"/>
 
   <menuitem
     id="carpooling_pooler_action"
     name="Poolers"
     action="pooler_action"
     parent="carpooling.carpooling_menu"
-    sequence="20"/>
+    sequence="30"/>
 </odoo>
