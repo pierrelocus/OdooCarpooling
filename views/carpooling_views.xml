@@ -23,7 +23,32 @@
               </button>
             </div>
             <group>
-
+              <group>
+                <field name="driver_id"/>
+                <field name="departure_id"/>
+                <field name="arrival_id"/>
+                <field name="seats"/>
+                <field name="steps_ids"/>
+              </group>
+              <group>
+                <field name="cost"/>
+                <field name="distance"/>
+                <field name="departure_date"/>
+                <field name="departure_time" widget="float_time"/>
+                <field name="info"/>
+                <field name="carpool_url"/>
+              </group>
+            </group>
+            <group>
+              <group>
+                <field name="money_economy"/>
+              </group>
+              <group>
+                <field name="avg_cotwo_economy"/>
+              </group>
+            </group>
+            <group>
+              <field name="pooler_ids"/>
             </group>
           </sheet>
           <div class="oe_chatter">
@@ -64,8 +89,11 @@
       <field name="name">carpooling.view.map</field>
       <field name="model">carpooling.carpooling</field>
       <field name="arch" type="xml">
-        <map res_partner="partner_id" routing="false">
-          
+        <map routing="false">
+          <!-- <marker-popup>
+            <field name="name"/>
+            <field name="contact_address_complete"/>
+          </marker-popup> -->
         </map>
       </field>
     </record>

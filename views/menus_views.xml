@@ -31,4 +31,24 @@
     action="pooler_action"
     parent="carpooling.carpooling_menu"
     sequence="30"/>
+  
+  <menuitem
+    id="carpooling_address_action"
+    name="Addresses"
+    action="address_action"
+    parent="carpooling.carpooling_menu"
+    sequence="40"/>
+
+    <!-- Server Actions -->
+    <record model="ir.actions.server" id="action_geolocalize_address">
+        <field name="name">Geolocalize address</field>
+        <field name="model_id" ref="model_carpooling_address"/>
+        <field name="binding_model_id" ref="model_carpooling_address" />
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records.geolocalize_address()
+        </field>
+    </record>
+
 </odoo>

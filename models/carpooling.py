@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, exceptions
 import datetime
 
 
@@ -25,10 +25,19 @@ class Carpooling(models.Model):
                                         compute='_on_pooler_manage_seats',
                                         default="0 / 0",
                                         store=True)
+    carpool_url         = fields.Char(compute='_compute_url')
     states              = [('new', "New"),
                             ('available', "Has seats available"),
                             ('full', "Full")]
     state               = fields.Selection(selection=states, default='new')
+
+
+    def _compute_url(self):
+        for rec in self:
+            base_url = rec.env["ir.config_parameter"].sudo().get_param("web.base.url")
+            action_id = rec.env.ref('carpooling.carpooling_action').id
+            rec.carpool_url = base_url + '/web#action=' + str(action_id)
+
 
     @api.depends('distance')
     def _on_distance_calculate(self):
@@ -43,13 +52,8 @@ class Carpooling(models.Model):
     @api.depends('pooler_ids', 'seats')
     def _on_pooler_manage_seats(self):
         for pool in self:
-            if pool.seats <= len(pool.pooler_ids) - 1:
-                return {
-                    'warning': {
-                        'title': "No more seats available",
-                        'message': "Not enough seats for you to join the ride !",
-                    }
-                }
+            if pool.seats < len(pool.pooler_ids):
+                raise exceptions.ValidationError("No more seat in this carpool")
             pool.taken_seats = len(pool.pooler_ids)
             pool.taken_seats_tree = str(pool.taken_seats) + ' / ' + str(pool.seats)
             if pool.taken_seats:

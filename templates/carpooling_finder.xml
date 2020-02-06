@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="carpooling.finder">
+        <t t-call="website.layout">
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h2 class="text-center">Find your carpool !</h2>
+                </div>
+            </div>
+            <div class="container">
+                <div t-if="carpools" class="row">
+                    <t t-foreach="carpools" t-as="carpool">
+                        <div style="padding: 4px; border: 1px black solid;" class="col-6">
+                            <div class="d-inline-block">
+                                On <span t-field="carpool.departure_date"/>
+                            </div>
+                            <div class="d-inline-block">
+                                At <span t-field="carpool.departure_time" t-options="{'widget': 'float_time'}"/>
+                            </div>
+                            <div>
+                                Ride with <span t-field="carpool.driver_id"/>
+                            </div>
+                            <div>
+                                From <span t-field="carpool.departure_tree"/>
+                            </div>
+                            <div>
+                                To <span t-field="carpool.arrival_tree"/>
+                            </div>
+                            <div>
+                                Taken seats : <span t-field="carpool.taken_seats_tree"/>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+                <div class="row my-3">
+                    <div class="col-8 mx-auto">
+                        <form class="form" method="post">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <div class="form-group">
+                                <label for="street">Street</label>
+                                <input type="text" class="form-control" id="street" name="street" placeholder="Street"/>
+                            </div>
+                            <div class="form-row mb-2">
+                                <div class="col-4">
+                                    <label for="zipcode">Zip code</label>
+                                    <input type="text" class="form-control" id="zipcode" name="zipcode" placeholder="Zip code"/>
+                                </div>
+                                <div class="col">
+                                    <label for="city">City</label>
+                                    <input type="text" class="form-control" id="city" name="city" placeholder="City"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">Country</label>
+                                <input type="text" class="form-control" id="country" name="country" placeholder="Country"/>
+                            </div>        
+                            <button type="submit" class="btn btn-primary">Find my carpool</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

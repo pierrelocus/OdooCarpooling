@@ -7,6 +7,7 @@ class Journey(models.Model):
     _description    = """Represents a journey. Once created, a journey can be converted
     into carpoolings."""
 
+    name                = fields.Char()
     driver_id           = fields.Many2one('res.partner', required=True,
                                         string="Driver",
                                         domain="[('is_company', '=', False)]")
@@ -15,12 +16,12 @@ class Journey(models.Model):
     departure_id        = fields.Many2one('carpooling.address', 
                                             string="Pickup point",
                                             required=True)
-    departure_tree      = fields.Char(related='departure_id.full_address',
+    departure_tree      = fields.Char(related='departure_id.contact_address_complete',
                                     string="Pickup point")
     arrival_id          = fields.Many2one('carpooling.address',
                                             string="Dropoff point",
                                             required=True)
-    arrival_tree        = fields.Char(related='arrival_id.full_address',
+    arrival_tree        = fields.Char(related='arrival_id.contact_address_complete',
                                     string="Dropoff point")
     steps_ids           = fields.Many2many('carpooling.address',
                                             string="Steps")
@@ -46,6 +47,7 @@ class Journey(models.Model):
                                         string="Carpoolings")
     has_carpoolings     = fields.Boolean(default=False)
 
+
     def action_toggle_carpools(self):
         self.ensure_one()
         self.has_carpoolings = not self.has_carpoolings
@@ -60,7 +62,6 @@ class Journey(models.Model):
             5: 'saturday',
             6: 'sunday'
         }
-        print("Hello world !")
         if self.has_carpoolings:
             if self.day_ids != False and untilday:
                 try:
@@ -88,9 +89,10 @@ class Journey(models.Model):
                     return {'warning': {'title': "Error", 'message': "An error occured"}}
         else:
             try:
-                self.carpooling_ids.unlink()
+                self.carpooling_ids.filtered(lambda d : d.departure_date >= datetime.date.today()).unlink()
             except:
                 return {}
+
     @api.depends('distance')
     def _on_distance_calculate(self):
         for pool in self:
@@ -105,19 +107,48 @@ class Journey(models.Model):
 class Address(models.Model):
     _name           = 'carpooling.address'
     _description    = 'Addresses for carpooling: Street, Zip, City'
-    
-    name   = fields.Char()
+
+    name   = fields.Char(required=True)
     description = fields.Char()
 
-    street  = fields.Char()
-    zipcode = fields.Integer()
-    city    = fields.Char()
-    full_address = fields.Char(compute="_compute_full_address")
+    street  = fields.Char(required=True)
+    zipcode = fields.Integer(required=True)
+    city    = fields.Char(required=True)
+    country_id = fields.Many2one('res.country', required=True)
 
-    @api.depends('street', 'zipcode', 'city')
-    def _compute_full_address(self):
-        self.ensure_one()
-        self.full_address = self.name + ': ' + self.street + ', ' + str(self.zipcode) + ' ' + self.city
+    latitude    = fields.Float('Geo Latitude', digits=(16, 5))
+    longitude   = fields.Float('Geo Longitude', digits=(16, 5))
+
+    contact_address_complete = fields.Char(compute="_compute_complete_address")
+    
+    def geolocalize_address(self):
+        for rec in self:
+            coordinates = rec._geo_localize(rec.street, rec.zipcode, rec.city, '', rec.country_id.name)
+            rec.latitude = coordinates[0]
+            rec.longitude = coordinates[1]
+    
+    def _geo_localize(self, street, zip, city, state, country):
+        geo_obj = self.env['base.geocoder']
+        search = geo_obj.geo_query_address(street=street, zip=zip, city=city, state=state, country=country)
+        result = geo_obj.geo_find(search, force_country=country)
+        if result is None:
+            search = geo_obj.geo_query_address(city=city, state=state, country=country)
+            result = geo_obj.geo_find(search, force_country=country)
+        return result
+    
+    
+    @api.depends('street', 'zipcode', 'city', 'country_id')
+    def _compute_complete_address(self):
+        for record in self:
+            record.contact_address_complete = ''
+            if record.street:
+                record.contact_address_complete += record.street+', '
+            if record.zipcode:
+                record.contact_address_complete += str(record.zipcode)+ ' '
+            if record.city:
+                record.contact_address_complete += record.city+', '
+            if record.country_id:
+                record.contact_address_complete += record.country_id.name
 
 class Pooler(models.Model):
     _inherit    = 'res.partner'
@@ -125,46 +156,6 @@ class Pooler(models.Model):
     carpooling_ids  = fields.Many2many('carpooling.carpooling',
                                         string="Carpoolings",
                                         default=0)
-    # contact_address_complete = fields.Char(compute='_compute_complete_address', store=True)
-
-    # @api.model
-    # def update_latitude_longitude(self, partners):
-    #     partners_data = defaultdict(list)
-
-    #     for partner in partners:
-    #         if 'id' in partner and 'partner_latitude' in partner and 'partner_longitude' in partner:
-    #             partners_data[(partner['partner_latitude'], partner['partner_longitude'])].append(partner['id'])
-
-    #     for values, partner_ids in partners_data.items():
-    #         # NOTE this should be done in sudo to avoid crashing as soon as the view is used
-    #         self.browse(partner_ids).sudo().write({
-    #             'partner_latitude': values[0],
-    #             'partner_longitude': values[1],
-    #         })
-
-    #     return {}
-
-    @api.onchange('street', 'zip', 'city', 'state_id', 'country_id')
-    def _delete_coordinates(self):
-        self.partner_latitude = False
-        self.partner_longitude = False
-
-    @api.depends('street', 'zip', 'city', 'country_id')
-    def _compute_complete_address(self):
-        for record in self:
-            record.contact_address_complete = ''
-            if record.street:
-                record.contact_address_complete += record.street+','
-            if record.zip:
-                record.contact_address_complete += record.zip+ ' '
-            if record.city:
-                record.contact_address_complete += record.city+','
-            if record.country_id:
-                record.contact_address_complete += record.country_id.name
-
-
-
-
 
 class Days(models.Model):
     _name           = 'carpooling.days'
@@ -177,3 +168,9 @@ class Days(models.Model):
                                         ('wednesday', 'Wednesday'),
                                         ('thursday', 'Thursday'),
                                         ('friday', 'Friday')])
+
+
+class Driver(models.Model):
+    _inherit        = 'res.partner'
+
+    

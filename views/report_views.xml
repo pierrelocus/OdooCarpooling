@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_assets_common" inherit_id="web.report_assets_common">
+        <xpath expr="." position="inside">
+            <link href="/carpooling/static/css/carpooling.css" rel="stylesheet" type="text/css"/>
+        </xpath>
+    </template>
+
+    <template id="carpooling_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="d">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h3 class="colo-purple mt-3 mb-3 d-inline-block">Carpooling</h3> <span class="d-inline-block" t-field="d.departure_date"/> at <span class="d-inline-block" t-field="d.departure_time" t-options="{'widget': 'float_time'}"/><br/>
+                        <h4 class="d-inline-block">Your trip with </h4> <span class="d-inline-block fs-l" t-field="d.driver_id"/> <div class="d-inline-block ml-4 mb-3"><img style="width: 75px; height: 75px;" t-att-src="image_data_uri(d.driver_id.image_128)"/></div>
+                        <div class="ml-2 mb-3">
+                            <div>
+                                <span class="d-inline-block colo-purple">From</span>
+                                <span class="d-inline-block t-right" t-field="d.departure_tree"/>
+                            </div>
+                            <div>
+                                <span class="d-inline-block colo-purple">To</span>
+                                <span class="d-inline-block t-right" t-field="d.arrival_tree"/></div>
+                            <div>
+                                <span class="d-inline-block colo-purple">Cost</span>
+                                 € <span class="d-inline-block t-right" t-field="d.cost"/></div>
+                            <div>
+                                <span class="d-inline-block colo-purple">Taken seats</span>
+                                <span class="d-inline-block t-right" t-field="d.taken_seats_tree"/>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h4>Poolers</h4>
+                            <div class="ml-2">
+                                <div class="poolers">
+                                    <div class="text-center" t-foreach="d.pooler_ids" t-as="pooler" >
+                                        <div><span t-field="pooler.name"/></div>
+                                        <div><img t-att-src="image_data_uri(pooler.image_128)"/></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

@@ -19,18 +19,23 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'mail'],
+    'depends': ['base', 'base_geolocalize', 'mail', 'website'],
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/journey_views.xml',
         'views/carpooling_views.xml',
+        'views/report_actions.xml',
+        'views/report_views.xml',
+        'templates/carpooling_finder.xml',
         'views/menus_views.xml',
-        #'views/journey_views.xml'
     ],
     # only loaded in demonstration mode
     'demo': [
         'demo/demo.xml',
     ],
+    'installable': True,
+    'auto_install': False,
+    'application': True,
 }

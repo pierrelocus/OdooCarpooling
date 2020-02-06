@@ -1,0 +1,19 @@
+h3, h4{
+    color: #00A09D;
+    margin-bottom: 10px;
+}
+.fs-l{font-size: 16px; margin-left: 4px;}
+.poolers > div{
+    display: inline-block;
+    margin: 5px 15px;
+}
+.colo-purple{
+    color:#875A7B;
+    width: 150px;
+}
+.page div > img{
+    border-radius: 50%;
+}
+.t-right{
+    min-width: 50%;
+}
