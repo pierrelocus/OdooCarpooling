@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, exceptions
 import datetime
+from geopy import distance
 
 
 class Carpooling(models.Model):
@@ -68,3 +69,53 @@ class Carpooling(models.Model):
         action = self.env.ref('carpooling.pooler_action').read()[0]
         action['domain'] = [('carpooling_ids.id', '=', self.id)]
         return action
+
+    def action_toggle_take_seat(self):
+        self.ensure_one()
+        if self.env.user.partner_id in self.pooler_ids:
+            self.pooler_ids -= self.env.user.partner_id
+        else:
+            self.pooler_ids |= self.env.user.partner_id
+
+
+
+
+
+class CarpoolingFinder(models.Model):
+    _name = 'carpooling.finder'
+    _description = "Looks for carpools at a maximum given distance of a given point"
+
+    name = fields.Char()
+    desccription = fields.Char()
+    
+    street  = fields.Char(required=True)
+    zipcode = fields.Integer(required=True)
+    city    = fields.Char(required=True)
+    country_id = fields.Many2one('res.country', required=True)
+    address_tree = fields.Char(string="Address", compute='_on_address_change', store=True)
+
+    distance = fields.Integer(required=True, string="Distance from address")
+
+    latitude    = fields.Float('Geo Latitude', digits=(16, 5))
+    longitude   = fields.Float('Geo Longitude', digits=(16, 5))
+    carpooling_ids = fields.Many2many('carpooling.carpooling', string="Nearby carpoolings", readonly=True, store=True, compute="_on_address_change")
+
+    @api.depends('street', 'zipcode', 'city', 'country_id', 'distance', 'latitude', 'longitude', 'carpooling_ids')
+    def _on_address_change(self):
+        for rec in self:
+            if rec.street and rec.zipcode and rec.city and rec.country_id:
+                rec.address_tree = '%s, %s %s, %s' % (rec.street, rec.zipcode, rec.city, rec.country_id.name)
+                resp = self.env['carpooling.address']._geo_localize(rec.street, rec.zipcode, rec.city, '', rec.country_id.name)
+                if resp:
+                    rec.latitude = resp[0]
+                    rec.longitude = resp[1]
+                    carpools = self.env['carpooling.carpooling'].search([('departure_date', '<', datetime.date.today() + datetime.timedelta(days=1))])
+                    to_create = []
+                    for pool in carpools:
+                        dst = distance.distance((rec.latitude, rec.longitude), (pool.departure_id.latitude, pool.departure_id.longitude)).km
+                        if dst < 10:
+                            to_create.append(pool.id)
+                    
+                    rec.carpooling_ids = [(6, 0, to_create)]
+
+

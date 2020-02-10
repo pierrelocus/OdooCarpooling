@@ -10,7 +10,9 @@ class Journey(models.Model):
     name                = fields.Char()
     driver_id           = fields.Many2one('res.partner', required=True,
                                         string="Driver",
-                                        domain="[('is_company', '=', False)]")
+                                        domain="[('is_company', '=', False)]",
+                                        readonly=True,
+                                        default=lambda self: self.env.user.partner_id)
     _rec_name           = 'driver_id'
     description         = fields.Text()
     departure_id        = fields.Many2one('carpooling.address', 
@@ -41,8 +43,10 @@ class Journey(models.Model):
                                         digits=(5,2))
     info                = fields.Text(string="Additional information")
     day_ids             = fields.One2many('carpooling.days', 'journey_id',
-                                        string="Days available")
-    until_date          = fields.Date(string="Available until")
+                                        string="Days available",
+                                        required=True)
+    until_date          = fields.Date(string="Available until",
+                                        required=True)
     carpooling_ids      = fields.One2many('carpooling.carpooling', 'journey_id',
                                         string="Carpoolings")
     has_carpoolings     = fields.Boolean(default=False)
@@ -172,5 +176,3 @@ class Days(models.Model):
 
 class Driver(models.Model):
     _inherit        = 'res.partner'
-
-    

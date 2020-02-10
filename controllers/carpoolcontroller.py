@@ -21,7 +21,7 @@ class Carpooling(http.Controller):
             resp = request.env['carpooling.address']._geo_localize(street, zipcode, city, '', country)
             if resp:
                 latlon = (resp[0], resp[1])
-                carpools = request.env['carpooling.carpooling'].search([('departure_date', '<', datetime.date.today() + datetime.timedelta(days=90))])
+                carpools = request.env['carpooling.carpooling'].search([('departure_date', '<', datetime.date.today() + datetime.timedelta(days=1))])
                 nearby_carpools = []
                 for pool in carpools:
                     dst = distance.distance(latlon, (pool.departure_id.latitude, pool.departure_id.longitude)).km

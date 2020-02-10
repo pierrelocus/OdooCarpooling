@@ -23,12 +23,13 @@
 
     # always loaded
     'data': [
-        'security/ir.model.access.csv',
+        'security/carpooling_security.xml',
         'views/journey_views.xml',
         'views/carpooling_views.xml',
         'views/report_actions.xml',
         'views/report_views.xml',
         'templates/carpooling_finder.xml',
+        'security/ir.model.access.csv',
         'views/menus_views.xml',
     ],
     # only loaded in demonstration mode

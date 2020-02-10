@@ -24,19 +24,19 @@
     action="carpooling_action"
     parent="carpooling.carpooling_menu"
     sequence="20"/>
-
-  <menuitem
-    id="carpooling_pooler_action"
-    name="Poolers"
-    action="pooler_action"
-    parent="carpooling.carpooling_menu"
-    sequence="30"/>
   
   <menuitem
     id="carpooling_address_action"
     name="Addresses"
     action="address_action"
     parent="carpooling.carpooling_menu"
+    sequence="30"/>
+
+  <menuitem
+    id="carpooling_find_carpool_action"
+    name="Find Carpool"
+    action="find_carpool_action"
+    parent="carpooling.root_menu"
     sequence="40"/>
 
     <!-- Server Actions -->

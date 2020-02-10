@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_carpooling_category" model="ir.module.category">
+        <field name="name">Carpooling</field>
+        <field name="sequence">22</field>
+    </record>
+    <record id="carpool_group_journey_creator" model="res.groups">
+        <field name="name">Creator</field>
+        <field name="category_id" ref="module_carpooling_category"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+    <record id="carpool_group_journey_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_carpooling_category"/>
+        <field name="implied_ids" eval="[(4, ref('carpool_group_journey_creator'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+    <record id="carpooling_journey_creator_only_editor" model="ir.rule">
+        <field name="name">Carpooling Journey only Creator can Edit</field>
+        <field name="model_id" ref="carpooling.journeys_action"/>
+        <field name="groups" eval="[(4, ref('carpool_group_journey_creator'))]"/>
+        <field name="domain_force">[('create_uid', '=', uid)]</field>
+    </record>
+    <record id="carpooling_journey_manager" model="ir.rule">
+        <field name="name">Carpooling Journey Manager</field>
+        <field name="model_id" ref="carpooling.journeys_action"/>
+        <field name="groups" eval="[(4, ref('carpool_group_journey_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

@@ -9,12 +9,14 @@
                     <button name="action_toggle_carpools" 
                             string="Create Carpoolings" 
                             class="oe_highlight" 
-                            type="object" 
+                            type="object"
+                            groups="carpooling.carpool_group_journey_creator" 
                             attrs="{'invisible': [('has_carpoolings', '=', True)]}"/>
                     <button name="action_toggle_carpools" 
                             string="Delete related carpoolings" 
                             class="oe_highlight" 
-                            type="object" 
+                            type="object"
+                            groups="carpooling.carpool_group_journey_creator"
                             attrs="{'invisible': [('has_carpoolings', '=', False)]}"/>
                 </header>
                 <sheet>

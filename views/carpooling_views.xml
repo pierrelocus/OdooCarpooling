@@ -5,8 +5,12 @@
       <field name="name">carpooling.carpooling.form</field>
       <field name="model">carpooling.carpooling</field>
       <field name="arch" type="xml">
-        <form>
+        <form edit="false">
           <header>
+            <button name="action_toggle_take_seat" 
+                    string="Toggle Seat" 
+                    class="oe_highlight" 
+                    type="object"/>
             <field name="state" widget="statusbar"/>
           </header>
           <sheet>
@@ -48,7 +52,13 @@
               </group>
             </group>
             <group>
-              <field name="pooler_ids"/>
+              <field name="pooler_ids">
+                <tree>
+                  <field name="name"/>
+                  <field name="phone"/>
+                  <field name="email"/>
+                </tree>
+              </field>
             </group>
           </sheet>
           <div class="oe_chatter">
@@ -132,7 +142,7 @@
       <field name="name">carpooling.pooler.tree</field>
       <field name="model">res.partner</field>
       <field name="arch" type="xml">
-        <tree string="Pooler">
+        <tree string="Pooler" create="false">
           <field name="name"/>
           <field name="carpooling_ids"/>
         </tree>
@@ -158,5 +168,49 @@
         <field name="sequence" eval="20"/>
         <field name="view_id" ref="carpooling.pooler_view_form"/>
         <field name="act_window_id" ref="carpooling.pooler_action"/>
+    </record>
+
+    <!-- Find Carpooling -->
+    <record id="find_carpool_form_view" model="ir.ui.view">
+      <field name="name">carpooling.finder.form</field>
+      <field name="model">carpooling.finder</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <group>
+              <group>
+                <field name="name"/>
+                <field name="street"/>
+                <field name="city"/>
+              </group>
+              <group>
+                <field name="zipcode"/>
+                <field name="country_id"/>
+                <field name="distance"/>
+              </group>
+              <field name="carpooling_ids" attrs="{'readonly': True}"/>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="find_carpool_tree_view" model="ir.ui.view">
+      <field name="name">carpooling.finder.tree</field>
+      <field name="model">carpooling.finder</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="address_tree"/>
+          <field name="distance"/>
+          <field name="carpooling_ids" widget="many2many_tags"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="find_carpool_action" model="ir.actions.act_window">
+      <field name="name">Find Carpool</field>
+      <field name="res_model">carpooling.finder</field>
+      <field name="view_mode">tree,form</field>
     </record>
 </odoo>
