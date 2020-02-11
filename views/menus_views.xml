@@ -58,4 +58,15 @@
         </field>
     </record>
 
+    <record model="ir.actions.server" id="action_relaunch_finder">
+        <field name="name">Relaunch finder</field>
+        <field name="model_id" ref="model_carpooling_finder"/>
+        <field name="binding_model_id" ref="model_carpooling_finder" />
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                records._on_address_change()
+        </field>
+    </record>
+
 </odoo>
