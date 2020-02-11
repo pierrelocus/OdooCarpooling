@@ -19,16 +19,16 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base', 'base_geolocalize', 'mail', 'website'],
+    'depends': ['base', 'base_geolocalize', 'mail'],
 
     # always loaded
     'data': [
-        'security/carpooling_security.xml',
         'views/journey_views.xml',
         'views/carpooling_views.xml',
         'views/report_actions.xml',
         'views/report_views.xml',
         'templates/carpooling_finder.xml',
+        'security/carpooling_security.xml',
         'security/ir.model.access.csv',
         'views/menus_views.xml',
     ],

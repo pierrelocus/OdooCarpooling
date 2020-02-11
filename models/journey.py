@@ -55,6 +55,7 @@ class Journey(models.Model):
     def action_toggle_carpools(self):
         self.ensure_one()
         self.has_carpoolings = not self.has_carpoolings
+        print("Has carpool == ", str(self.has_carpoolings))
         todayday    = datetime.date.today()
         untilday    = self.until_date
         dayz        = {
@@ -67,9 +68,12 @@ class Journey(models.Model):
             6: 'sunday'
         }
         if self.has_carpoolings:
+            print("Has carpoolings TRUE")
             if self.day_ids != False and untilday:
+                print("self_day_ids != false and untilday :")
                 try:
                     while todayday <= untilday:
+                        print("While...")
                         for dday in self.day_ids:
                             cur_time    = dday.times
                             cur_day     = dday.day
@@ -82,6 +86,7 @@ class Journey(models.Model):
                                     'departure_time': cur_time,
                                     'arrival_id': self.arrival_id.id,
                                     'steps_ids': [(6, 0, self.steps_ids.ids)],
+                                    'until_date': self.until_date,
                                     'seats': self.seats,
                                     'distance': self.distance,
                                     'cost': self.cost,
@@ -172,6 +177,7 @@ class Days(models.Model):
                                         ('wednesday', 'Wednesday'),
                                         ('thursday', 'Thursday'),
                                         ('friday', 'Friday')])
+    has_return      = fields.Boolean(string="Return ?")
 
 
 class Driver(models.Model):

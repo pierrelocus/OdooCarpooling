@@ -37,7 +37,8 @@ class Carpooling(models.Model):
         for rec in self:
             base_url = rec.env["ir.config_parameter"].sudo().get_param("web.base.url")
             action_id = rec.env.ref('carpooling.carpooling_action').id
-            rec.carpool_url = base_url + '/web#action=' + str(action_id)
+            model_id = rec.id
+            rec.carpool_url = base_url + '/web#action=%s&id=%s' % (str(action_id), str(model_id))
 
 
     @api.depends('distance')
@@ -113,9 +114,30 @@ class CarpoolingFinder(models.Model):
                     to_create = []
                     for pool in carpools:
                         dst = distance.distance((rec.latitude, rec.longitude), (pool.departure_id.latitude, pool.departure_id.longitude)).km
-                        if dst < 10:
+                        if dst < rec.distance:
                             to_create.append(pool.id)
                     
                     rec.carpooling_ids = [(6, 0, to_create)]
 
 
+
+
+class CarpoolRequest(models.Model):
+    _name = 'carpooling.request'
+    _description = """
+        Let users request carpools so people can check if they can help.
+        When creating a request, existing carpools at less than 5km will be shown.
+    """
+
+    name = fields.Char()
+    description = fields.Char()
+
+    departure_id        = fields.Many2one('carpooling.address', 
+                                            string="Pickup point",
+                                            required=True)
+    arrival_id          = fields.Many2one('carpooling.address', 
+                                            string="Arrival point",
+                                            required=True)
+    day_ids             = fields.One2many('carpooling.days', 'journey_id',
+                                        string="Days needed",
+                                        required=True)

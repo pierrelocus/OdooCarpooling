@@ -86,11 +86,18 @@
     </record>
 
     <record id="carpooling_view_search" model="ir.ui.view">
-      <field name="name">carpooling.view.search</field>
+      <field name="name">carpooling.carpooling.search</field>
       <field name="model">carpooling.carpooling</field>
       <field name="arch" type="xml">
         <search string="Search Carpooling">
-          
+          <field name="name"/>
+          <field name="departure_date"/>
+          <field name="departure_id"/>
+          <field name="arrival_id"/>
+          <filter name="filter_ride_today" string="Ride today"
+                  domain="[('departure_date', '&gt;=', context_today().strftime('%Y-%m-%d')), 
+                          ('departure_date', '&lt;', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d'))]
+                  "/>
         </search>
       </field>
     </record>
@@ -211,6 +218,13 @@
     <record id="find_carpool_action" model="ir.actions.act_window">
       <field name="name">Find Carpool</field>
       <field name="res_model">carpooling.finder</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <record id="request_carpool_action" model="ir.actions.act_window">
+      <field name="name">Request Carpool</field>
+      <field name="res_model">carpooling.request</field>
       <field name="view_mode">tree,form</field>
     </record>
 </odoo>

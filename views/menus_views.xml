@@ -12,6 +12,20 @@
     sequence="10"/>
 
   <menuitem
+    id="carpooling_find_carpool_action"
+    name="Find Carpool"
+    action="find_carpool_action"
+    parent="carpooling.root_menu"
+    sequence="20"/>
+
+  <menuitem
+    id="carpooling_request_carpool_action"
+    name="Carpool requests"
+    action="request_carpool_action"
+    parent="carpooling.root_menu"
+    sequence="30"/>
+
+  <menuitem
     id="carpooling_journeys_action"
     name="Journeys"
     action="journeys_action"
@@ -31,13 +45,6 @@
     action="address_action"
     parent="carpooling.carpooling_menu"
     sequence="30"/>
-
-  <menuitem
-    id="carpooling_find_carpool_action"
-    name="Find Carpool"
-    action="find_carpool_action"
-    parent="carpooling.root_menu"
-    sequence="40"/>
 
     <!-- Server Actions -->
     <record model="ir.actions.server" id="action_geolocalize_address">

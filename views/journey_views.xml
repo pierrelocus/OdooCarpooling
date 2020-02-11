@@ -94,6 +94,7 @@
             <tree editable="bottom">
                 <field name="day"/>
                 <field name="times" widget="float_time"/>
+                <field name="has_return"/>
             </tree>
         </field>
     </record>
