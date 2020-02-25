@@ -6,18 +6,32 @@
         <field name="arch" type="xml">
             <form>
                 <header>
+                    <t t-if="user_can_join is True">
+                        <button name="action_join_journey"
+                                string="Join journey"
+                                class="oe_highlight"
+                                type="object"
+                                attrs="{'invisible': [('has_carpoolings', '=', False)]}" />
+                    </t>
+                    <t t-if="user_can_join is False">
+                        <button name="action_join_journey"
+                            string="Leave journey"
+                            class="oe_highlight"
+                            type="object"
+                            attrs="{'invisible': [('has_carpoolings', '=', False)]}" />
+                    </t>
                     <button name="action_toggle_carpools" 
                             string="Create Carpoolings" 
                             class="oe_highlight" 
                             type="object"
                             groups="carpooling.carpool_group_journey_creator" 
-                            attrs="{'invisible': [('has_carpoolings', '=', True)]}"/>
+                            attrs="{'invisible': [('has_carpoolings', '=', True)]}" />
                     <button name="action_toggle_carpools" 
                             string="Delete related carpoolings" 
                             class="oe_highlight" 
                             type="object"
                             groups="carpooling.carpool_group_journey_creator"
-                            attrs="{'invisible': [('has_carpoolings', '=', False)]}"/>
+                            attrs="{'invisible': [('has_carpoolings', '=', False)]}" />
                 </header>
                 <sheet>
                     <group>
@@ -45,6 +59,10 @@
                         <group>
                             <field name="avg_cotwo_economy"/>
                         </group>
+                    </group>
+                    <hr/>
+                    <group>
+                        <field name="journey_pooler_ids" string="Poolers in journey"/>
                     </group>
                 </sheet>
             </form>

@@ -15,7 +15,6 @@ class Carpooling(models.Model):
     journey_id          = fields.Many2one('carpooling.journey', 
                                         string="Journey",
                                         ondelete='cascade')
-    pooler_ids          = fields.Many2many('res.partner', string="Poolers")
     departure_date      = fields.Date(string="Departure date")
     departure_time      = fields.Float(string="Departure time")
     taken_seats         = fields.Integer(string="Taken seats",
@@ -26,6 +25,7 @@ class Carpooling(models.Model):
                                         compute='_on_pooler_manage_seats',
                                         default="0 / 0",
                                         store=True)
+    pooler_ids          = fields.Many2many('res.partner', string="Poolers")
     carpool_url         = fields.Char(compute='_compute_url')
     states              = [('new', "New"),
                             ('available', "Has seats available"),
@@ -110,9 +110,10 @@ class CarpoolingFinder(models.Model):
                 if resp:
                     rec.latitude = resp[0]
                     rec.longitude = resp[1]
-                    carpools = self.env['carpooling.carpooling'].search([('departure_date', '<', datetime.date.today() + datetime.timedelta(days=1))])
+                    carpools = self.env['carpooling.carpooling'].search([('departure_date', '<', datetime.date.today() + datetime.timedelta(days=3))])
                     to_create = []
                     for pool in carpools:
+                        self.env['carpooling.address'].browse(pool.departure_id.id).geolocalize_address()
                         dst = distance.distance((rec.latitude, rec.longitude), (pool.departure_id.latitude, pool.departure_id.longitude)).km
                         if dst < rec.distance:
                             to_create.append(pool.id)

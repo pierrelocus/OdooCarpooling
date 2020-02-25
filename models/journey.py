@@ -47,15 +47,37 @@ class Journey(models.Model):
                                         required=True)
     until_date          = fields.Date(string="Available until",
                                         required=True)
+    journey_pooler_ids  = fields.Many2many('res.partner', 'carpooling_journey_pooler_partner', string="Poolers in journey")
     carpooling_ids      = fields.One2many('carpooling.carpooling', 'journey_id',
                                         string="Carpoolings")
     has_carpoolings     = fields.Boolean(default=False)
+    user_can_join       = fields.Boolean(compute='_compute_connected_user', store=True)
 
+    def _compute_connected_user(self):
+        for rec in self:
+            if rec.has_carpoolings:
+                for carpool in rec.carpooling_ids:
+                    if self.env.user.partner_id.id in carpool.pooler_ids:
+                        rec.user_can_join = False
+                    else:
+                        rec.user_can_join = True
+        
+    def action_join_journey(self):
+        self.ensure_one()
+        if self.has_carpoolings:
+            for carpool in self.carpooling_ids:
+                if self.env.user.partner_id in carpool.pooler_ids:
+                    carpool.pooler_ids -= self.env.user.partner_id
+                else:
+                    carpool.pooler_ids |= self.env.user.partner_id
+            if self.env.user.partner_id in self.journey_pooler_ids:
+                self.journey_pooler_ids -= self.env.user.partner_id
+            else:
+                self.journey_pooler_ids |= self.env.user.partner_id
 
     def action_toggle_carpools(self):
         self.ensure_one()
         self.has_carpoolings = not self.has_carpoolings
-        print("Has carpool == ", str(self.has_carpoolings))
         todayday    = datetime.date.today()
         untilday    = self.until_date
         dayz        = {
@@ -68,12 +90,9 @@ class Journey(models.Model):
             6: 'sunday'
         }
         if self.has_carpoolings:
-            print("Has carpoolings TRUE")
             if self.day_ids != False and untilday:
-                print("self_day_ids != false and untilday :")
                 try:
                     while todayday <= untilday:
-                        print("While...")
                         for dday in self.day_ids:
                             cur_time    = dday.times
                             cur_day     = dday.day
