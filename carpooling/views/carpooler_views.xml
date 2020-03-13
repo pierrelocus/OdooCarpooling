@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="carpooling_carpooler_view_kanban" model="ir.ui.view">
+        <field name="name">carpooling.carpooler.profiles.view.kanban</field>
+        <field name="model">carpooling.carpooler</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="preference" quick_create="false">
+                <field name="name"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="driver_id" />
+                                </strong>
+                                <div class="o_kanban_tags_section">
+                                    <field name="contact_address" />
+                                    <field name="additional_info" />
+                                </div>
+                            </div>
+                            <div class="o_kanban_button">
+                                <a class="oe_kanban_action oe_kanban_action_a">
+                                    button?
+                                </a>
+                            </div>
+                            <div class="o_kanban_inline_block">
+                                <field name="seats" /> Seats
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="carpooling_carpooler_view_form" model="ir.ui.view">
+        <field name="name">carpooling.carpooler.view.form</field>
+        <field name="model">carpooling.carpooler</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="driver_id" />
+                            <field name="contact_address" />
+                            <field name="has_car" />
+                            <field name="seats" />
+                        </group>
+                        <group>
+                            <field name="preference"/>
+                            <field name="additional_info" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Carpool Requests">
+                            <field name="r_carpool_ids">
+                                <tree editable="bottom">
+                                    <field name="carpooler_id" />
+                                    <field name="destination" />
+                                    <field widget="many2many_tags" name="step_ids" />
+                                    <field widget="many2many_tags" name="datetimes_ids" />
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="carpooling_carpooler_view_tree" model="ir.ui.view">
+        <field name="name">carpooling.carpooler.view.tree</field>
+        <field name="model">carpooling.carpooler</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="driver_id" />
+                <field name="preference"/>
+                <field name="has_car" />
+                <field name="contact_address" />
+                <field name="seats" />
+                <field name="additional_info" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="carpooling_carpooler" model="ir.actions.act_window">
+        <field name="name">Carpoolers</field>
+        <field name="res_model">carpooling.carpooler</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+</odoo>
