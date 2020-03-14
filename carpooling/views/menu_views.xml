@@ -11,10 +11,25 @@
     parent="carpooling.root_menu"
     sequence="10"/>
 
-    <menuitem
+  <menuitem
     id="carpooling_poolers_profiles_menu"
     name="Carpoolers"
     action="carpooling_carpooler"
     parent="carpooling.carpooling_menu"
     sequence="10"/>
+
+  <menuitem
+    id="carpooling_carpool_requests_menu"
+    name="Carpool requests"
+    action="carpooling_requests"
+    parent="carpooling.carpooling_menu"
+    sequence="20"/>
+
+  <menuitem
+    id="carpooling_carpools_menu"
+    name="Carpools"
+    action="carpooling_carpools"
+    parent="carpooling.carpooling_menu"
+    sequence="30"/>
+
 </odoo>

@@ -25,6 +25,8 @@
     # always loaded
     'data': [
         'views/carpooler_views.xml',
+        'views/request_views.xml',
+        'views/carpool_views.xml',
         'views/utils_views.xml',
         'views/menu_views.xml',
     ],

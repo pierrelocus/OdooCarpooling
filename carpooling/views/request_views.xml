@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="carpooling_request_view_tree" model="ir.ui.view">
+        <field name="name">carpooling.request.view.tree</field>
+        <field name="model">carpooling.request</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="carpooler_id" />
+                <field name="destination" />
+                <field name="step_ids" widget="many2many_tags" />
+                <field name="datetimes_ids" widget="many2many_tags" />
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="carpooling_requests" model="ir.actions.act_window">
+        <field name="name">Carpoolers</field>
+        <field name="res_model">carpooling.request</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

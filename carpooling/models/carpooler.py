@@ -47,11 +47,11 @@ class CarpoolAddress(models.Model):
             if rec.street:
                 complete += rec.street
             if rec.zipcode:
-                complete += rec.zipcode
+                complete += ', ' + rec.zipcode
             if rec.city:
-                complete += rec.city
+                complete += ' ' + rec.city
             if rec.country_id:
-                complete += rec.country_id.name
+                complete += ', ' + rec.country_id.name
             rec.complete_address = complete
 
 
@@ -60,7 +60,7 @@ class CarpoolDatetimes(models.Model):
     _rec_name   =   'formatted_datetime'
 
     name        =   fields.Char()
-    formatted_datetime  =   fields.Char(compute='_on_date_time')
+    formatted_datetime  =   fields.Char(compute='_on_date_time', string="Days / Times")
     days        =   fields.Selection([('mon',   'Monday'),
                                     ('tue',     'Tuesday'),
                                     ('wed',     'Wednesday'),
@@ -71,7 +71,12 @@ class CarpoolDatetimes(models.Model):
                                     ('midearly',    '8:00 - 9:00'),
                                     ('normal',      '8:30 - 9:30'),
                                     ('midlate',     '9:00 - 10:00'),
-                                    ('late',        '9:30 - 10:30')])
+                                    ('late',        '9:30 - 10:30'),
+                                    ('amearly',     '15:30 - 16:30'),
+                                    ('ammidearly',    '16:00 - 17:00'),
+                                    ('amnormal',      '16:30 - 17:30'),
+                                    ('ammidlate',     '17:00 - 18:00'),
+                                    ('amlate',        '17:30 - 18:30')])
     relations   =   {
         'mon'       : 'Monday',
         'tue'       : 'Tuesday',
@@ -82,7 +87,12 @@ class CarpoolDatetimes(models.Model):
         'midearly'  : '8:00 - 9:00',
         'normal'    : '8:30 - 9:30',
         'midlate'   : '9:00 - 10:00',
-        'late'      : '9:30 - 10:30'
+        'late'      : '9:30 - 10:30',
+        'amearly'     : '15:30 - 16:30',
+        'ammidearly'  : '16:00 - 17:00',
+        'amnormal'    : '16:30 - 17:30',
+        'ammidlate'   : '17:00 - 18:00',
+        'amlate'      : '17:30 - 18:30'
     }
 
     @api.depends('days', 'times')

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record id="carpooling_carpool_view_form" model="ir.ui.view">
+        <field name="name">carpooling.carpool.view.form</field>
+        <field name="model">carpooling.carpool</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="status" widget="statusbar" clickable="1" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="from_id" />
+                            <field name="to_id" />
+                        </group>
+                        <group>
+                            <field name="step_ids" widget="many2many_tags" />
+                            <field name="schedule_ids" widget="many2many_tags" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="carpooler_ids">
+                            <tree editable="Bottom">
+                                <field name="driver_id" string="Name" />
+                                <field name="has_car" string="Car?" />
+                                <field name="seats" string="Seats" />
+                                <field name="preference" />
+                                <field name="additional_info" />
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="carpooling_carpool_view_tree" model="ir.ui.view">
+        <field name="name">carpooling.carpool.view.tree</field>
+        <field name="model">carpooling.carpool</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="from_id" />
+                <field name="to_id" />
+                <field name="step_ids" widget="many2many_tags" />
+                <field name="schedule_ids" widget="many2many_tags" />
+            </tree>
+        </field>
+    </record>
+
+
+    <record id="carpooling_carpools" model="ir.actions.act_window">
+        <field name="name">Carpools</field>
+        <field name="res_model">carpooling.carpool</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
