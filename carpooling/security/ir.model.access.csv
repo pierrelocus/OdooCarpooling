@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_carpooling_address,access_carpooling_address,model_carpooling_address,base.group_user,1,1,1,1
+access_carpooling_datetimes,access_carpooling_datetimes,model_carpooling_datetimes,base.group_user,1,1,1,1
+access_carpooling_request,access_carpooling_request,model_carpooling_request,base.group_user,1,1,1,1
+access_carpooling_carpool,access_carpooling_carpool,model_carpooling_carpool,base.group_user,1,1,1,1
+access_carpooling_schedule,access_carpooling_schedule,model_carpooling_schedule,base.group_user,1,1,1,1
+access_carpooling_carpooler,access_carpooling_carpooler,model_carpooling_carpooler,base.group_user,1,1,1,1

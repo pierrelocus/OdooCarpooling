@@ -27,6 +27,11 @@ class CarpoolRequest(models.Model):
     step_ids        =   fields.Many2many('carpooling.address', string="Steps")
     datetimes_ids   =   fields.Many2many('carpooling.datetimes', string="Days / Times")
 
+    def action_create_carpool(self):
+        self.ensure_one()
+        return True
+
+
 
 
 class CarpoolAddress(models.Model):

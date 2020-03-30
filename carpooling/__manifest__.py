@@ -24,6 +24,7 @@
 
     # always loaded
     'data': [
+        'security/ir.model.access.csv',
         'views/carpooler_views.xml',
         'views/request_views.xml',
         'views/carpool_views.xml',

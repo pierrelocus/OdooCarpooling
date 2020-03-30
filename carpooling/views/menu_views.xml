@@ -7,7 +7,7 @@
   
   <menuitem
     id="carpooling_menu"
-    name="Carpooling"
+    name="Menu"
     parent="carpooling.root_menu"
     sequence="10"/>
 
